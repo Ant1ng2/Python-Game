@@ -61,9 +61,7 @@ def drawMenu(screen, mx, my, button):
     for i in range(len(choiceList)):
         rect = choiceList[i]
         pygame.draw.rect(screen, GREY, rect)
-     
         mouse = pygame.mouse.get_pos()
-     
            
         if 250 + 500 > mouse[0] > 250 and 220+75 > mouse[1] > 220:
             pygame.draw.rect (screen, DARKGREY, (250,220,500,75))
@@ -82,11 +80,9 @@ def drawMenu(screen, mx, my, button):
         screen.blit(deleteTitle,(350,332))
         reportsTitle = fontHello.render(displayList[2],1, BLACK)
         screen.blit( reportsTitle, (445,430))
-       
-                                     
+    
         #allows the states to change:
         if rect.collidepoint(mx, my) == True and button == 1:
-
             if i == 0:
                 state = STATE_2
                 randomCard = random.choice(trashList)
@@ -95,24 +91,25 @@ def drawMenu(screen, mx, my, button):
             elif i == 2:
                 state = STATE_4
                
-           
 def drawPlatform():
     pygame.draw.rect(screen, BROWN, (0,550,300,20))
     pygame.draw.rect(screen, BROWN, (400,500,280,20))
-   
+
+trash_collectables = [pygame.Rect(100,460,100,200), pygame.Rect(150,200,100,200)]
+
 def playGame():
-    global ballX, ballY, ballLives, jumping, acc, randomCard
+    global ballX, ballY, y_change, ballLives, jumping, acc, randomCard
     screen.blit(backgroundPic, (0,0,1000,700))  
     screen.blit(randomCard, (450,50))
     pygame.draw.circle(screen, BLUE, (ballX, ballY), ballRadius)
-    screen.blit(trashPic1, (100,460,100,200))
-    screen.blit(trashPic2, (150,200))
+    for collect in trash_collectables:
+        screen.blit(trashPic1, collect)
     text = fontHello.render("Lives: " + str(lives) , 1, BLACK)
     screen.blit(text,(800,10))
     drawPlatform()
     if jumping == True:
         ballY -= acc
-        acc-= 1
+        acc -= 1
         if ballY >= height:
             jumping = False
             acc = 0  
@@ -141,9 +138,9 @@ def playGame():
         ballY = 500
         y_change = 0
            
-    for i in trashRect:
+    for i in trash_collectables:
         if circleRect.colliderect(i):
-            trashRect.remove(i)
+            trash_collectables.remove(i)
    
 running = True
 myClock = pygame.time.Clock()
